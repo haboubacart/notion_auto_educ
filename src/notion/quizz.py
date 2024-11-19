@@ -12,9 +12,7 @@ def get_last_quizz(client, database_id) :
     return result
 
 def get_last_quizz_row_id(client, database_id) :
-    bd_data_response =  client.databases.query(database_id=database_id)
-    result = bd_data_response['results'][0]['properties']['Identifiant']['unique_id']
-    return result['number']
+    return client.databases.query(database_id=database_id)['results'][0]['properties']['Identifiant']['unique_id']['number']
 
 def create_new_quizz_row(client, database_id, questions, responses):
     client.pages.create(
@@ -59,3 +57,28 @@ def add_grade_to_quizz_row(client, database_id, row_id, note, a_reviser=False):
         )
     else:
         print(f"Page with Identifiant 'QUIZZ{row_id}' not found.")
+
+def find_subject_to_quizz(client, database_id) : 
+  result = {}
+  last_subject = client.databases.query(database_id=database_id)['results'][0]['properties']
+  list_questions = last_subject['Questions']['title'][0]['plain_text']
+  list_responses = last_quizz['Reponses']['rich_text'][0]['plain_text']
+  livre_to_quizz = get_id_livre_database(client, database_id)[13]
+  id = livre_to_quizz['id_page_sujet_livre']
+  intitule_livre = livre_to_quizz['intitule_sujet']
+  result['id'] = id
+  result['intitule_livre'] = intitule_livre
+  return result
+
+
+def get_id_livre_database(client, database_id):
+    bd_data_response =  client.databases.query(database_id=database_id)
+    content = []
+    for item in bd_data_response['results']:
+       content.append(
+          {
+             "id_page_notion_livre" : item["properties"]["id_page_notion_livre"]["title"][0]["text"]["content"],
+             "intitule_livre" : item["properties"]["intitule_livre"]["rich_text"][0]["text"]["content"]
+          }
+       )
+    return(content)

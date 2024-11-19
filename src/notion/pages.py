@@ -1,7 +1,8 @@
 from src.notion.quizz import (add_grade_to_quizz_row, 
                   create_new_quizz_row,
                   get_last_quizz_row_id,
-                  get_last_quizz)
+                  get_last_quizz,
+                  )
 
 from src.chatgpt.prompts import (get_corrector_prompt,
                                  get_quizz_prompt)
@@ -100,6 +101,41 @@ def extract_text_from_block(client, block_id) :
                 extracted_text += "\n"
     return extracted_text
 
+def update_id_livres_database(client, lecture_page_id, database_livre_id) :
+     blocks = client.databases.query(database_id=lecture_page_id)
+     for livre in blocks['results'] : 
+        id = livre["id"]
+        intitule = livre["properties"]["Name"]["title"][0]["text"]["content"]
+        # Vérifier si la page existe déjà
+        existing_pages = client.databases.query(
+                **{
+                "database_id": database_livre_id,
+                "filter": {
+                    "property": "id_page_notion_livre",
+                    "title": {
+                        "equals": id
+                    }
+                }
+            }
+        )
+        # Si aucune page existante n'est trouvée, créer une nouvelle page
+        if not existing_pages['results']:
+            print("adding")
+            client.pages.create(
+                    **{
+                        "parent": {
+                            "database_id": database_livre_id
+                        },
+                        'properties': {
+                            "id_page_notion_sujet" : {'title': [{'text': {'content': id}}]},
+                            "intitule_sujet" : {'rich_text': [{'text': {'content': intitule}}]}
+                        }
+                    }
+                )
+
+
+
+
 def generate_user_response_object(list_questions, list_responses, list_user_reponses):
   resp_object = []
   for question, response, user_response in zip(list_questions, list_responses, list_user_reponses):
@@ -110,24 +146,18 @@ def generate_user_response_object(list_questions, list_responses, list_user_repo
     })
   return resp_object
 
-def find_livre_to_quizz(client, NOTION_DATABASE_LIVRE_ID) : 
-  result = {}
-  livre_to_quizz = get_id_livre_database(client, NOTION_DATABASE_LIVRE_ID)[13]
-  id = livre_to_quizz['id_page_notion_livre']
-  intitule_livre = livre_to_quizz['intitule_livre']
-  result['id'] = id
-  result['intitule_livre'] = intitule_livre
-  return result
 
-
-def cron_quizz_generation(client, NOTION_DATABASE_LIVRE_ID) : 
-  livre = find_livre_to_quizz(client, NOTION_DATABASE_LIVRE_ID)
-  retrieved_texte = f'Titre du livre : {livre['intitule_livre']} \n {extract_text_from_block(client, livre['id'])}'
+def last_subject_quizz_generation(client, database_id, quizz_database_id) : 
+  res_last_item = client.databases.query(database_id=database_id)['results'][-1]
+  last_subject = {
+                "id_page_notion_sujet" : res_last_item["properties"]["id_page_notion_sujet"]["title"][0]["text"]["content"],
+                "intitule_sujet" : res_last_item["properties"]["intitule_sujet"]["rich_text"][0]["text"]["content"]
+                 }
+  retrieved_texte = f'Titre du livre : {last_subject['intitule_sujet']} \n {extract_text_from_block(client, last_subject['id_page_notion_sujet'])}'
   print(retrieved_texte)
   quizz = response_to_query(get_quizz_prompt(retrieved_texte))
-  print(quizz)
   create_new_quizz_row(client, 
-                       NOTION_DATABASE_QUIZZ_ID, 
+                       quizz_database_id, 
                        str(quizz['list_questions']), 
                        str(quizz['list_responses']))
 
