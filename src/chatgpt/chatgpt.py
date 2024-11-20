@@ -9,11 +9,10 @@ client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
              
 def response_to_query(prompt, query='') -> json:
   completion = client.chat.completions.create(
-      model="gpt-4",
+      model="gpt-4o-mini",
       messages=[
-              {"role": "system", "content": prompt},
-              {"role": "user", "content": query}, 
-          ]
+              {"role": "user", "content": prompt}
+              ]
       )
   content = completion.choices[0].message.content
   print(content)

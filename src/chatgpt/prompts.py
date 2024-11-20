@@ -62,57 +62,62 @@ def get_corrector_prompt(q_a_user_reponses):
 
 def get_prompt_TEACHER(subject) :
   prompt_TEACHER = '''
-   Tu es un expert en culture générale et tu adoptes le rôle d’un spécialiste expliquant un sujet en profondeur.
+   Tu es un expert en culture générale et tu adoptes le rôle d un spécialiste expliquant un sujet en profondeur.
    Le sujet d'aujourd'hui porte sur : ''' + subject + '''.
    Tu dois développer ce sujet de manière approfondie et fournir un cours bien structuré, complet et détaillé. 
-   Ta réponse doit être rendue obligatoirement sous la forme d'un JSON bien formaté, structuré comme suit :
+   Ta réponse doit être rendue obligatoirement sous la forme d'un texte structuré comme suit :
    {
-   "action": "generate_topic",
-   "value": {
-      "head": {
-         "titre": "Une reformulation captivante du titre du sujet",
-         "illustration": "Ajoute un emoji pertinent pour illustrer le sujet, compatible avec Notion"
-      },
-      "body": {
-         "Introduction": {
-            "titre": "Introduction au sujet. Tu peux formuler comme tu le souhaites le titre de l'introduction",
-            "texte": "Propose une introduction engageante qui présente le sujet, avec un aperçu des aspects qui seront explorés."
+      "action": "generate_topic",
+      "value": 
+      {
+         "head": 
+         {
+            "titre": "Une reformulation captivante du titre du sujet",
+            "illustration": "Emoji pertinent pour illustrer le sujet, compatible avec Notion"
          },
-         "Point_1": {
-            "titre": "1- Titre du premier point",
-            "texte": "Explique en profondeur le premier point du sujet, avec des exemples, des explications détaillées et des références pertinentes."
-         },
-         "Point_2": {
-            "titre": "2- Titre du deuxième point",
-            "texte": "Développe le deuxième point, en apportant des faits, des études ou des exemples précis pour mieux comprendre ce concept."
-         },
-         "Point_3": {
-            "titre": "3- Titre du troisième point",
-            "texte": "Présente le troisième point avec des détails clairs, des statistiques ou des éléments de contexte qui apportent de la valeur au sujet."
-         },
-         "Point_4": {
-            "titre": "4- Titre du quatrième point",
-            "texte": "Explore le quatrième point avec des explications détaillées, des exemples pratiques ou des illustrations pertinentes."
-         },
-         "Point_5": {
-            "titre": "5- Titre du cinquième point",
-            "texte": "Fournis une conclusion détaillée sur le cinquième point, incluant des informations finales et des perspectives intéressantes."
-         },
-         "Conclusion": {
-            "titre": "Conclusion",
-            "texte": "Fais un résumé des idées clés du sujet et propose des réflexions ou des ouvertures supplémentaires."
-         },
-         "Sources": {
-            "titre": "Sources",
-            "texte": "Liste les 3 principales sources utilisées pour cette explication sous forme de liens URL ou références."
+         "body": 
+         {
+            "Introduction": {
+               "titre": "Introduction au sujet. Tu peux formuler comme tu le souhaites le titre de l'introduction",
+               "texte": "Propose une introduction engageante qui présente le sujet. L'introduction doivent être bien développée pour bien présenter le sujet, avec un aperçu des aspects qui seront explorés."
+            },
+            "Point_1": {
+               "titre": "1- Titre du premier point",
+               "texte": "Explique en profondeur le premier point du sujet, avec des exemples, des explications détaillées et des références pertinentes."
+            },
+            "Point_2": {
+               "titre": "2- Titre du deuxième point",
+               "texte": "Développe le deuxième point, en apportant des faits, des études ou des exemples précis pour mieux comprendre ce concept."
+            },
+            "Point_3": {
+               "titre": "3- Titre du troisième point",
+               "texte": "Présente le troisième point avec des détails clairs, des statistiques ou des éléments de contexte qui apportent de la valeur au sujet."
+            },
+            "Point_4": {
+               "titre": "4- Titre du quatrième point",
+               "texte": "Explore le quatrième point avec des explications détaillées, des exemples pratiques ou des illustrations pertinentes."
+            },
+            "Point_5": {
+               "titre": "5- Titre du cinquième point",
+               "texte": "Fournis une conclusion détaillée sur le cinquième point, incluant des informations finales et des perspectives intéressantes."
+            },
+            "Conclusion": {
+               "titre": "Conclusion",
+               "texte": "Fais un résumé des idées clés du sujet et propose des réflexions ou des ouvertures supplémentaires."
+            },
+            "Sources": {
+               "titre": "Sources",
+               "texte": "les 3 principales sources que tu recommandes pour aller plus loin dans le sujet, sous forme de liens URL. Une reference par ligne"
+            }
          }
       }
    }
-}
    Instructions supplémentaires :
-   1 - Développement complet : Chacun des 5 points point doit être détaillé (en 100 mots environs), en appuyant les concepts par des faits, des statistiques, des études, des exemples concrets ou des références académiques.
-   2 - Structuration claire : Utilise des listes, des retours à la ligne et des sous-points pour clarifier et structurer les idées.
+   0 - Obligatoire : la sortie doit être une chaine de caractère, pas de code
+   1 - Développement complet : Chacun des 5 points point doit être très détaillé (en 300 mots au moins), en appuyant les concepts par des faits réel. Ajoute des statistiques, des études, des exemples concrets ou des références académiques.
+   2 - Structuration claire : Utilise de la mise en forme textuelle : gras, italique, listes, des retours à la ligne et des sous-points pour clarifier et structurer les idées.
    3 - Rigueur académique : Assure-toi que chaque point soit rigoureusement développé et bien soutenu par des informations fiables.
-   4 - Sources : Indique les sources d’informations fiables sous forme de liens URL. Une référence complète pour chaque source est essentielle.
+   4 - Sources : Indique les sources d informations fiables sous forme de liens URL. Pas de liste avec []
    '''
   return prompt_TEACHER
+
