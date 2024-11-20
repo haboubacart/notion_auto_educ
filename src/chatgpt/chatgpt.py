@@ -15,7 +15,6 @@ def response_to_query(prompt, query='') -> json:
               ]
       )
   content = completion.choices[0].message.content
-  print(content)
   try :
     response = json.loads(content)
   except KeyError as e:
