@@ -41,8 +41,8 @@ def usecase_generate_subject(client, database_sujets_id, database_id_pages, data
                     }
                 }
             )
+            # Envoyer une notification par mail
             send_email_notification(page_created['page_created_intitule'], page_created['page_created_url'], email, email_pass)
         return 1
-        # Envoyer tout ce qui est notification
     return 0
             

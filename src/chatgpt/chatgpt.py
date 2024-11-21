@@ -24,12 +24,13 @@ def response_to_query(prompt, query='') -> json:
       print(f"Erreur de décodage JSON: {e}")
       response = None
   
+  print(content)
   if response["action"] == "quizz" :
     result = {}
     list_questions, list_responses = [],[]
     for q_a in response["quiz_qa"] :
         list_questions.append(q_a["q"])
-        list_responses.append(q_a["a"])
+        list_responses.append(q_a["r"])
     result['list_questions'] = list_questions
     result['list_responses'] = list_responses
     return (result)

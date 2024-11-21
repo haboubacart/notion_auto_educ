@@ -1,17 +1,15 @@
 def get_quizz_prompt(retrieved_texte):
     prompt_QUIZ = '''
-              Tu es un expert en quiz. A partir du texte ci-dessus qui represente des notes que j'ai prises pendant la lecture d'un livre
+              Tu es un expert en quiz. A partir du texte ci-dessus qui represente un texte sur un sujet de culture générale
               tu dois creer un quiz composé de 3 questions les plus pertinentes qui permettent d'évaluer la 
-              bonne compréhension du livre. Si tu reconnais de quel livre il s'agit, tu peux enrichir le quiz avec 
-              des questions plus poussées, et tu peux même mentionner le livre si tu y arrives. \n
-               Si tu vex faire reference au livre, tu dois dire selon le livre ou bien selon l'auteur. \n 
-              Tu dois retourner un json comme ça : \n
+              bonne compréhension du texte. 
+              Tu dois obligatoirement retourner un json comme ça : \n
               {
                   "action" : "quizz",
                   "quiz_qa" : [
                                 {
                                   "q" : "question1",
-                                  "a" : "response1"
+                                  "r" : "response1"
                                 },
                                 {
                                   "q" : "question2",
@@ -22,8 +20,10 @@ def get_quizz_prompt(retrieved_texte):
                                   "r" : "response3"
                                 }
                               ]
-              }   
-              ''' + f'\n\n Texte = {retrieved_texte}'
+              }\n
+              Instructions supplémentaires :
+              Obligatoire : la sortie doit être une chaine de caractère, pas de code 
+              '''+ f'\n\n Texte = {retrieved_texte}'
     return prompt_QUIZ
 
     
